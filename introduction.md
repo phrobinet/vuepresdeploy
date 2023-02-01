@@ -28,51 +28,51 @@ Voici à quoi ressemble l'utilisation de pinia en termes d'API (n'oubliez pas de
 
 ```js
 // stores/counter.js
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const useCounterStore = defineStore('counter', {
+export const useCounterStore = defineStore("counter", {
   state: () => {
-    return { count: 0 }
+    return { count: 0 };
   },
   // pourrait également être défini comme
   // state: () => ({ count: 0 })
   actions: {
     increment() {
-      this.count++
+      this.count++;
     },
   },
-})
+});
 ```
 
 And then you _use_ it in a component:
 
 ```js
-import { useCounterStore } from '@/stores/counter'
+import { useCounterStore } from "@/stores/counter";
 
 export default {
   setup() {
-    const counter = useCounterStore()
+    const counter = useCounterStore();
 
-    counter.count++
+    counter.count++;
     // avec autocomplétion ✨
-    counter.$patch({ count: counter.count + 1 })
+    counter.$patch({ count: counter.count + 1 });
     // ou en utilisant une action à la place
-    counter.increment()
+    counter.increment();
   },
-}
+};
 ```
 
 Vous pouvez même utiliser une fonction (similaire à un composant `setup()`) pour définir un store pour des cas d'utilisation plus avancés :
 
 ```js
-export const useCounterStore = defineStore('counter', () => {
-  const count = ref(0)
+export const useCounterStore = defineStore("counter", () => {
+  const count = ref(0);
   function increment() {
-    count.value++
+    count.value++;
   }
 
-  return { count, increment }
-})
+  return { count, increment };
+});
 ```
 
 Si vous n'êtes toujours pas intéressé par `setup()` et l'API de composition, ne vous inquiétez pas, Pinia supporte également un ensemble similaire de [_map helpers_ like Vuex](https://vuex.vuejs.org/guide/state.html#the-mapstate-helper). Vous définissez les magasins de la même manière mais vous utilisez ensuite `mapStores()`, `mapState()`, ou `mapActions()` :
@@ -121,46 +121,41 @@ Pinia (prononcé `/piːnjʌ/`, comme "peenya" en anglais) est le mot le plus pro
 Voici un exemple plus complet de l'API que vous utiliserez avec Pinia **avec des types même en JavaScript**. Pour certaines personnes, cela peut être suffisant pour commencer sans lire davantage, mais nous vous recommandons tout de même de consulter le reste de la documentation ou même de sauter cet exemple et de revenir une fois que vous aurez lu tous les _concepts de base_.
 
 ```js
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
 
-export const todos = defineStore('todos', {
+export const todos = defineStore("todos", {
   state: () => ({
-    /** @type {{ text: string, id: number, isFinished: boolean }[]} */
     todos: [],
-    /** @type {'all' | 'finished' | 'unfinished'} */
-    filter: 'all',
+    filter: "all",
     // le type sera automatiquement déduit en nombre
     nextId: 0,
   }),
   getters: {
     finishedTodos(state) {
       // autocomplétion ! ✨
-      return state.todos.filter((todo) => todo.isFinished)
+      return state.todos.filter((todo) => todo.isFinished);
     },
     unfinishedTodos(state) {
-      return state.todos.filter((todo) => !todo.isFinished)
+      return state.todos.filter((todo) => !todo.isFinished);
     },
-    /**
-     * @returns {{ text: string, id: number, isFinished: boolean }[]}
-     */
     filteredTodos(state) {
-      if (this.filter === 'finished') {
+      if (this.filter === "finished") {
         // appeler d'autres getters avec autocomplétion ✨
-        return this.finishedTodos
-      } else if (this.filter === 'unfinished') {
-        return this.unfinishedTodos
+        return this.finishedTodos;
+      } else if (this.filter === "unfinished") {
+        return this.unfinishedTodos;
       }
-      return this.todos
+      return this.todos;
     },
   },
   actions: {
     // n'importe quel nombre d'arguments, retourne une promesse ou pas
     addTodo(text) {
       // vous pouvez directement modifier l'état
-      this.todos.push({ text, id: this.nextId++, isFinished: false })
+      this.todos.push({ text, id: this.nextId++, isFinished: false });
     },
   },
-})
+});
 ```
 
 ### Comparaison avec Vuex
